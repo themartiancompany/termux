@@ -47,7 +47,7 @@ clean:
 
 	if [[ ! -e "$${PWD}/man/"* ]]; then \
 	  cd \
-	    "man";
+	    "man"; \
 	  make \
 	    clean; \
 	fi	
