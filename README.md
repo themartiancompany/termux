@@ -25,11 +25,11 @@
 
 The `termux` command source repository,
 which launches the
-[Termux android terminal application](
+[Termux Android terminal application](
   https://github.com/termux/termux-app).
 
 The `termux` command is currently not included
-by default in the Termux android terminal
+by default in the Termux Android terminal
 application.
 
 To run the `termux` command you need to
