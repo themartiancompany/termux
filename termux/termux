@@ -234,7 +234,7 @@ Usage:
      -v                          Enable verbose output
 
 The full manual for this program can be consulted
-with the 'man termux-cmd' and the 'man termux'
+with the 'man termux-cli' or the 'man termux-cmd'
 commands.
 
 ENDUSAGETEXT
