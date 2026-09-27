@@ -223,7 +223,7 @@ Usage:
 
      -d <delay>                  Delay in seconds from the start
                                  of the application to show
-                                 or hide the keyboard.
+                                 or to hide the keyboard.
                                  Default: ${keyboard_delay}
 
      -c <command>                Runs the argument command in the
