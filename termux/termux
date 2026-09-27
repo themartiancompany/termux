@@ -233,6 +233,10 @@ Usage:
      -h                          This message.
      -v                          Enable verbose output
 
+The full manual for this program can be consulted
+with the 'man termux-cmd' and the 'man termux'
+commands.
+
 ENDUSAGETEXT
   _printf \
     '%s\n' \
