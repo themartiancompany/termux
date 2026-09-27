@@ -26,7 +26,7 @@
 
 SHELL = bash
 _PROJECT=termux
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 DOC_DIR=$(DESTDIR)$(PREFIX)/share/doc/$(_PROJECT)
 BIN_DIR=$(DESTDIR)$(PREFIX)/bin
 
