@@ -46,7 +46,11 @@ _root_requirements() {
     "activity-launch" \
     "android-activity-utils"
   _check_cmd \
-    "sdotool"
+    "keyboard-show" \
+    "android-input-utils"
+  _check_cmd \
+    "keyboard-hide" \
+    "android-input-utils"
 }
 
 # shellcheck disable=SC2034
@@ -55,6 +59,9 @@ _global_variables() {
   launch_mode=""
   transition_type=""
   transition_duration=""
+  transition_delay=""
+  keyboard_show=""
+  keyboard_hide=""
   target_command=""
   color=""
   quiet=""
@@ -65,7 +72,10 @@ _termux() {
     _mode="${1}" \
     _transition_type="${2}" \
     _transition_duration="${3}" \
-    _command="${4}" \
+    _keyboard_show="${4}" \
+    _keyboard_hide="${5}" \
+    _keyboard_delay="${6}" \
+    _command="${7}" \
     _activity_launch_opts=()
   if [[ "${quiet}" == "n" ]]; then
     _activity_launch_opts+=(
@@ -82,6 +92,16 @@ _termux() {
     "${_activity_launch_opts[@]}" \
     "com.termux" \
     ".app.TermuxActivity"
+  if [[ "${_keyboard_show}" == "y" ]]; then
+    sleep \
+      "${_keyboard_delay}"
+    keyboard-show
+  fi
+  if [[ "${_keyboard_hide}" == "y" ]]; then
+    sleep \
+      "${_keyboard_delay}"
+    keyboard-hide
+  fi
 }
 
 _set_overrides() {
@@ -111,6 +131,18 @@ _set_overrides() {
     "transition" \
     "duration" \
     "3"
+  _set_override \
+    "keyboard" \
+    "show" \
+    "n"
+  _set_override \
+    "keyboard" \
+    "hide" \
+    "n"
+  _set_override \
+    "keyboard" \
+    "delay" \
+    "2"
 }
 
 # Shows configuration options.
@@ -120,6 +152,9 @@ _show_config() {
   _msg_info "              Launch mode:   ${launch_mode}"
   _msg_info "          Transition type:   ${transition_type}"
   _msg_info "      Transition duration:   ${transition_duration}"
+  _msg_info "            Keyboard show:   ${keyboard_show}"
+  _msg_info "            Keyboard hide:   ${keyboard_hide}"
+  _msg_info "    Keyboard action delay:   ${keyboard_delay}"
   _msg_info "           Target command:   ${target_command}"
 }
 
@@ -155,10 +190,30 @@ Usage:
                                  It can be 'dim' or 'none'.
                                  Default: ${transition_type}
 
-     -D <transition-duration>    Transition to show during application
-                                 switch or launch.
-                                 It can be 'dim' or 'none'.
-                                 Default: ${transition_type}
+     -D <transition-duration>    Switch/launch transition
+                                 duration in seconds.
+                                 Default: ${transition_duration}
+
+     -k                          Shows virtual keyboard at start.
+                                 Default: ${keyboard_show}
+
+     -K                          Hides virtual keyboard at start.
+                                 This option works only if virtual
+                                 keyboard is set to start at
+                                 start through the app, otherwise,
+                                 or if virtual keyboard is set
+                                 to not appear when an hardware
+                                 keyboard is connected and the
+                                 hardware keyboard is currently
+                                 connected, enabling this option
+                                 will get back to the current
+                                 application in a second or two.
+                                 Default: ${keyboard_hide}
+
+     -d <delay>                  Delay in seconds from the start
+                                 of the application to show
+                                 or hide the keyboard.
+                                 Default: ${keyboard_delay}
 
      -c <command>                Runs the argument command in the
                                  terminal. Curretly implemented
@@ -181,7 +236,7 @@ _global_variables
 # shellcheck disable=SC2034
 while \
   getopts \
-    'm:T:D:vh?' \
+    'm:T:D:k:K:d:c:vh?' \
     arg; do
   case \
     "${arg}" in
@@ -191,6 +246,12 @@ while \
       override_transition_type="${OPTARG}" ;;
     D)
       override_transition_duration="${OPTARG}" ;;
+    k)
+      override_keyboard_show="y" ;;
+    K)
+      override_keyboard_hide="y" ;;
+    d)
+      override_keyboard_delay="${OPTARG}" ;;
     c)
       override_target_command="${OPTARG}" ;;
     v)
@@ -220,6 +281,9 @@ app_opts=(
   "${launch_mode}"
   "${transition_type}"
   "${transition_duration}"
+  "${keyboard_show}"
+  "${keyboard_delay}"
+  "${keyboard_delay}"
   "${target_command}"
 )
 _show_config
