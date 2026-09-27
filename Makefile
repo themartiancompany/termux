@@ -43,6 +43,16 @@ all:
 
 check: shellcheck
 
+clean:
+
+	if [[ ! -e "$${PWD}/man/"* ]]; then \
+	  cd \
+	    "man";
+	  make \
+	    clean; \
+	fi	
+
+
 prepare:
 
 	git \
