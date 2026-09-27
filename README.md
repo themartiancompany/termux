@@ -81,6 +81,10 @@ make \
   install
 ```
 
+The `termux` command depends on the
+[Android Activity Utilities](
+  https://github.com/themartiancompany/android-activity-utils).
+
 ## Documentation
 
 The `termux` command launches and brings in focus
