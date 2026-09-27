@@ -45,6 +45,8 @@ _root_requirements() {
   _check_cmd \
     "activity-launch" \
     "android-activity-utils"
+  _check_cmd \
+    "sdotool"
 }
 
 # shellcheck disable=SC2034

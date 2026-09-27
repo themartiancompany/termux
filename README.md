@@ -81,9 +81,14 @@ make \
   install
 ```
 
-The `termux` command depends on the
+The `termux` command depends on the `activity-launch`
+command, part of the
 [Android Activity Utilities](
-  https://github.com/themartiancompany/android-activity-utils).
+  https://github.com/themartiancompany/android-activity-utils)
+and the
+[`sdotool`](
+  https://github.com/themartiancompany/sdotool)
+program.
 
 ## Documentation
 
