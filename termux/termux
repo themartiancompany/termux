@@ -261,6 +261,8 @@ while \
       override_transition_type="${OPTARG}" ;;
     D)
       override_transition_duration="${OPTARG}" ;;
+    w)
+      override_screen_wakeup="y" ;;
     k)
       override_keyboard_show="y" ;;
     K)
