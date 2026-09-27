@@ -182,7 +182,7 @@ _usage() {
       _usage_text << \
         ENDUSAGETEXT || true
 
-Launches the Termux android terminal.
+The Termux Android terminal.
 
 Usage:
 
