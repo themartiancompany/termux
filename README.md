@@ -81,19 +81,29 @@ make \
   install
 ```
 
-The `termux` command depends on the `activity-launch`
-command, part of the
+The `termux` command depends on the `activity-launch`,
+`keyboard-show` and `keyboard-hide` commands, which
+are part of the
 [Android Activity Utilities](
-  https://github.com/themartiancompany/android-activity-utils)
-and the
+  https://github.com/themartiancompany/android-activity-utils),
+and from the
 [`sdotool`](
-  https://github.com/themartiancompany/sdotool)
-program.
+  https://github.com/themartiancompany/sdotool).
+
 
 ## Documentation
 
 The `termux` command launches and brings in focus
 the Termux application.
+
+The help can be shown with the `termux -h` command,
+the manual can be shown with the `man termux` command.
+
+The manual is also available in ReSTructured format
+in the `man` submodule directory, pointing to the
+[`termux-man`](
+  https://github.com/themartiancompany/termux-man)
+repository.
 
 ## License
 

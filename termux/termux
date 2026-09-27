@@ -75,7 +75,7 @@ _termux() {
     _keyboard_show="${4}" \
     _keyboard_hide="${5}" \
     _keyboard_delay="${6}" \
-    _command="${7}" \
+    _target_command="${7}" \
     _activity_launch_opts=()
   if [[ "${quiet}" == "n" ]]; then
     _activity_launch_opts+=(
@@ -101,6 +101,17 @@ _termux() {
     sleep \
       "${_keyboard_delay}"
     keyboard-hide
+  fi
+  if [[ "${_target_command}" != "" ]]; then
+    sleep \
+      "${_keyboard_delay}"
+    sudo \
+      input \
+        text \
+          "${_target_command}"
+    sdotool \
+      key \
+        "enter"
   fi
 }
 
@@ -217,7 +228,7 @@ Usage:
 
      -c <command>                Runs the argument command in the
                                  terminal. Curretly implemented
-                                 using 'sdotool'. Very rough.
+                                 using 'input'.
 
      -h                          This message.
      -v                          Enable verbose output
