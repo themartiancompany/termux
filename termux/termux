@@ -1,0 +1,227 @@
+#!/usr/bin/env bash
+
+# SPDX-License-Identifier: AGPL-3.0
+
+#    -----------------------------------------------------
+#    Copyright © 2024, 2025, 2026  Pellegrino Prevete
+#
+#    All rights reserved
+#    -----------------------------------------------------
+#
+#    This program is free software: you can redistribute
+#    it and/or modify it under the terms of the
+#    GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of
+#    the License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it
+#    will be useful, but WITHOUT ANY WARRANTY;
+#    without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#    See the GNU Affero General Public License for
+#    more details.
+#
+#    You should have received a copy of the
+#    GNU Affero General Public License
+#    along with this program.
+#    If not, see <https://www.gnu.org/licenses/>.
+
+_bin="$(
+  dirname \
+    "$(command \
+         -v \
+	 "env")")"
+_lib="${_bin}/../lib"
+_share="${_bin}/../share"
+_crash_bash="${_lib}/libcrash-bash/crash-bash"
+_sourced \
+  "${_crash_bash}" \
+  2>"/dev/null" \
+  1>"/dev/null" || \
+source \
+  "${_crash_bash}"
+
+_root_requirements() {
+  _check_cmd \
+    "activity-launch" \
+    "android-activity-utils"
+}
+
+# shellcheck disable=SC2034
+_global_variables() {
+  launch_date=""
+  launch_mode=""
+  transition_type=""
+  transition_duration=""
+  target_command=""
+  color=""
+  quiet=""
+}
+
+_termux() {
+  local \
+    _mode="${1}" \
+    _transition_type="${2}" \
+    _transition_duration="${3}" \
+    _command="${4}" \
+    _activity_launch_opts=()
+  if [[ "${_quiet}" == "n" ]]; then
+    _activity_launch_opts+=(
+      -v
+    )
+  fi
+  _activity_launch_opts+=(
+    -T
+      "${_transition_type}"
+    -D
+      "${_transition_duration}"
+  )
+  activity-launch \
+    "${_activity_launch_opts[@]}" \
+    "com.termux" \
+    ".app.TermuxActivity"
+}
+
+_set_overrides() {
+  if [[ -v override_color ]]; then
+    color="${override_color}"
+  elif [[ -z "${color}" ]]; then
+    color="n"
+  fi
+  if [[ -v override_quiet ]]; then
+    quiet="${override_quiet}"
+  elif [[ -z "${quiet}" ]]; then
+    quiet="y"
+  fi
+  _set_override \
+    "launch" \
+    "date" \
+    "$(_get_date_human)"
+  _set_override \
+    "launch" \
+    "mode" \
+    "root"
+  _set_override \
+    "transition" \
+    "type" \
+    "none"
+  _set_override \
+    "transition" \
+    "duration" \
+    "3"
+}
+
+# Shows configuration options.
+_show_config() {
+  _msg_info "${app_name} configuration"
+  _msg_info "              Launch date:   ${launch_date}"
+  _msg_info "              Launch mode:   ${launch_mode}"
+  _msg_info "          Transition type:   ${transition_type}"
+  _msg_info "      Transition duration:   ${transition_duration}"
+  _msg_info "           Target command:   ${target_command}"
+}
+
+# Show help usage, with an exit status.
+# $1: exit status number.
+_usage() {
+  local \
+    _exit_code="${1}" \
+    _usage_text
+  IFS='' \
+    read \
+      -r \
+      -d '' \
+      _usage_text << \
+        ENDUSAGETEXT || true
+
+Launches the Termux android terminal.
+
+Usage:
+
+  ${app_name}
+    [options]
+
+  options:
+
+     -m <mode>                   Method to use to switch activity.
+                                 It can be:
+                                 - root.
+                                 Default: ${launch_mode}
+
+     -T <transition-type>        Transition to show during application
+                                 launch.
+                                 It can be 'dim' or 'none'.
+                                 Default: ${transition_type}
+
+     -D <transition-duration>    Transition to show during application
+                                 switch or launch.
+                                 It can be 'dim' or 'none'.
+                                 Default: ${transition_type}
+
+     -c <command>                Runs the argument command in the
+                                 terminal. Curretly implemented
+                                 using 'sdotool'. Very rough.
+
+     -h                          This message.
+     -v                          Enable verbose output
+
+ENDUSAGETEXT
+  _printf \
+    '%s\n' \
+    "${_usage_text}"
+  exit \
+    "${_exit_code}"
+}
+
+_globals
+_global_variables
+# shellcheck disable=SC2004
+# shellcheck disable=SC2034
+while \
+  getopts \
+    'm:T:D:vh?' \
+    arg; do
+  case \
+    "${arg}" in
+    m)
+      override_launch_mode="${OPTARG}" ;;
+    T)
+      override_transition_type="${OPTARG}" ;;
+    D)
+      override_transition_duration="${OPTARG}" ;;
+    c)
+      override_target_command="${OPTARG}" ;;
+    v)
+      override_quiet="n" ;;
+    h|?)
+      _set_overrides
+      _usage \
+        0 ;;
+    *)
+      _msg=(
+        "Invalid argument '${arg}'."
+      )
+      _msg_error \
+        "${_msg[*]}" \
+        0
+      _set_overrides
+      _usage \
+        1 ;;
+  esac
+done
+shift \
+  $((
+    OPTIND - 1 \
+  ))
+_set_overrides
+app_opts=(
+  "${launch_mode}"
+  "${transition_type}"
+  "${transition_duration}"
+  "${target_command}"
+)
+_show_config
+_termux \
+  "${app_opts[@]}"
+
+# vim:set sw=2 sts=-1 et:
