@@ -65,7 +65,7 @@ _termux() {
     _transition_duration="${3}" \
     _command="${4}" \
     _activity_launch_opts=()
-  if [[ "${_quiet}" == "n" ]]; then
+  if [[ "${quiet}" == "n" ]]; then
     _activity_launch_opts+=(
       -v
     )
