@@ -67,6 +67,16 @@ install-scripts:
 	  -vDm755 \
 	  "$(_PROJECT)/$(_PROJECT)" \
 	  "$(BIN_DIR)/$(_PROJECT)"
+	ln \
+	  -s \
+	  "$(PREFIX)/bin/$(_PROJECT)" \
+	  "$(BIN_DIR)/$(_PROJECT)-cli" || \
+	true
+	ln \
+	  -s \
+	  "$(PREFIX)/bin/$(_PROJECT)" \
+	  "$(BIN_DIR)/$(_PROJECT)-cmd" || \
+	true
 
 install-doc:
 
@@ -100,6 +110,8 @@ uninstall-scripts:
 
 	rm \
 	  -vrf \
-	  "$(BIN_DIR)/$(_PROJECT)"
+	  "$(BIN_DIR)/$(_PROJECT)" \
+	  "$(BIN_DIR)/$(_PROJECT)-cli" \
+	  "$(BIN_DIR)/$(_PROJECT)-cmd"
 
 .PHONY: check install install-doc install-man install-scripts shellcheck uninstall uninstall-man uninstall-scripts
